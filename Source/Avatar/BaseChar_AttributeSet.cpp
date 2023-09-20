@@ -99,7 +99,7 @@ void UBaseChar_AttributeSet::PostAttributeChange(const FGameplayAttribute& Attri
 	if (Attribute == GetCurrentSpeedAttribute())
 	{
 	
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, "SpeedChange");
+		
 		TargetChar->GetCharacterMovement()->MaxWalkSpeed = NewValue;
 	
 	}
@@ -145,9 +145,21 @@ void UBaseChar_AttributeSet::AdjustAttributeForMaxChange(FGameplayAttributeData&
 	{
 		// Change current value to maintain the Current Value / Maximum Value percentage.
 		const float CurrentValue = AffectedAttribute.GetCurrentValue();
-		const float NewDelta = (CurrentMaxValue > 0.f) ? (CurrentValue * NewMaxValue / CurrentMaxValue) - CurrentValue : NewMaxValue;
+		//CurrentValue* NewMaxValue / CurrentMaxValue
+		FString TheFloatStr = FString::SanitizeFloat(NewMaxValue - CurrentMaxValue);
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, *TheFloatStr);
+		//TheFloatStr = FString::SanitizeFloat(CurrentValue);
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, *TheFloatStr);
+		TheFloatStr = FString::SanitizeFloat(CurrentValue+(NewMaxValue - CurrentMaxValue));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, *TheFloatStr);
+		 float NewDelta= (CurrentMaxValue > 0.f) ? FMath::Clamp(CurrentValue,0.0,NewMaxValue) : NewMaxValue;
+		if (NewMaxValue > CurrentMaxValue)
+		{
+			NewDelta = (CurrentMaxValue > 0.f) ? CurrentValue + (NewMaxValue - CurrentMaxValue) : NewMaxValue;
+		}
+		
 
-		AbilitySystemComponent->ApplyModToAttributeUnsafe(AffectedAttributeProperty, EGameplayModOp::Additive, NewDelta);
+		AbilitySystemComponent->ApplyModToAttributeUnsafe(AffectedAttributeProperty, EGameplayModOp::Override, NewDelta);
 	}
 }
 
