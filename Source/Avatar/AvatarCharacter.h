@@ -24,16 +24,17 @@ class AAvatarCharacter : public ACharacter, public IAbilitySystemInterface
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-
 	//AbilitySystem
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UBaseChar_AbilitySystemComponent* AbilitySystemComp;
+	
 
 	UPROPERTY()
 		class UBaseChar_AttributeSet* AttributeSet;
 public:
 	AAvatarCharacter();
 
+	
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UBoxComponent* AttackCollisionComp;
@@ -83,6 +84,15 @@ public:
 
 	UFUNCTION()
 		void IncrementComboCount();
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AGAS_HitActor> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<UGameplayEffect> DamageGameplayEffect;
+
+	UFUNCTION()
+		virtual void AttackAbilityBoostTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 protected:
 

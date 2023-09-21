@@ -34,8 +34,12 @@ void UBaseChar_AttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
+		
 		// Store a local copy of the amount of Damage done and clear the Damage attribute.
 		const float LocalDamageDone = GetDamage();
+
+		FString TheFloatStr = "Dam=" + FString::SanitizeFloat(LocalDamageDone);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Blue, *TheFloatStr);
 
 		SetDamage(0.f);
 
@@ -145,13 +149,7 @@ void UBaseChar_AttributeSet::AdjustAttributeForMaxChange(FGameplayAttributeData&
 	{
 		// Change current value to maintain the Current Value / Maximum Value percentage.
 		const float CurrentValue = AffectedAttribute.GetCurrentValue();
-		//CurrentValue* NewMaxValue / CurrentMaxValue
-		FString TheFloatStr = FString::SanitizeFloat(NewMaxValue - CurrentMaxValue);
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, *TheFloatStr);
-		//TheFloatStr = FString::SanitizeFloat(CurrentValue);
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, *TheFloatStr);
-		TheFloatStr = FString::SanitizeFloat(CurrentValue+(NewMaxValue - CurrentMaxValue));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, *TheFloatStr);
+		
 		 float NewDelta= (CurrentMaxValue > 0.f) ? FMath::Clamp(CurrentValue,0.0,NewMaxValue) : NewMaxValue;
 		if (NewMaxValue > CurrentMaxValue)
 		{

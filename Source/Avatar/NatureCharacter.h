@@ -13,5 +13,24 @@ UCLASS()
 class AVATAR_API ANatureCharacter : public AAvatarCharacter
 {
 	GENERATED_BODY()
+
+public:
+	
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AGAS_HitActor> BuffedProjectileClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		TSubclassOf<UGameplayEffect> BuffedDamageGameplayEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AGAS_HitActor> NormalProjectileClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		TSubclassOf<UGameplayEffect> NormalDamageGameplayEffect;
+
+	
+		virtual void AttackAbilityBoostTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
+
 	
 };

@@ -69,7 +69,7 @@ AAvatarCharacter::AAvatarCharacter()
 	AbilitySystemComp = CreateDefaultSubobject<UBaseChar_AbilitySystemComponent>(TEXT("AbilitySystemComp"));
 	AbilitySystemComp->SetIsReplicated(true);
 	AbilitySystemComp->SetReplicationMode(EGameplayEffectReplicationMode::Full);
-
+	AbilitySystemComp->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Buff")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAvatarCharacter::AttackAbilityBoostTagChanged);
 	AttributeSet = CreateDefaultSubobject<UBaseChar_AttributeSet>(TEXT("AttributeSet"));
 
 	bUseControllerRotationYaw = true;
@@ -202,6 +202,10 @@ void AAvatarCharacter::IncrementComboCount()
 	{
 		ComboCount = 1;
 	}
+}
+
+void AAvatarCharacter::AttackAbilityBoostTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
 }
 
 void AAvatarCharacter::OnResetVR()
