@@ -107,7 +107,7 @@ void UGA_BaseProjctWaitEvent_OwnerBase::EventReceived(FGameplayTag EventTag, FGa
 		// We set up a line trace from our current location to a point 1000cm ahead of us
 		FVector TraceStart = CameraLocation;
 		//FVector CameFor =Hero->GetCamForwardVector()
-		FVector TraceEnd = TraceStart + Hero->GetCamForwardVector() * 10000.0f;
+		FVector TraceEnd = TraceStart + Hero->GetCamForwardVector() * 100000.0f;
 
 		FCollisionQueryParams QueryParams;
 		QueryParams.AddIgnoredActor(Hero);
@@ -127,8 +127,9 @@ void UGA_BaseProjctWaitEvent_OwnerBase::EventReceived(FGameplayTag EventTag, FGa
 		// Skew the aim to be slightly upwards.
 		FRotator MuzzleRotation = UKismetMathLibrary::FindLookAtRotation(MuzzleLocation, TraceEnd);
 
-		if (GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECollisionChannel::ECC_Camera, QueryParams))
+		if (GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, QueryParams))
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, "Hit Line");
 			FVector HitLoc = Hit.ImpactPoint;
 			MuzzleRotation = UKismetMathLibrary::FindLookAtRotation(MuzzleLocation, HitLoc);
 		}

@@ -25,7 +25,7 @@ void UGA_BaseChar_BuffSelf::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Orange, "Buff");
 		FGameplayAbilityTargetDataHandle TDataHandle = UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(Hero);
 		ApplyGameplayEffectToTarget(GetCurrentAbilitySpecHandle(), CurrentActorInfo, CurrentActivationInfo, TDataHandle, BuffGameplayEffect, 1);
-		
+		CommitAbilityCooldown(GetCurrentAbilitySpecHandle(), CurrentActorInfo, CurrentActivationInfo, false);
 	}
 
 	//ApplyCost(GetCurrentAbilitySpecHandle(), CurrentActorInfo, CurrentActivationInfo);
