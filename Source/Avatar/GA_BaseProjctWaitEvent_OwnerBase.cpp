@@ -125,7 +125,7 @@ void UGA_BaseProjctWaitEvent_OwnerBase::EventReceived(FGameplayTag EventTag, FGa
 		FVector MuzzleLocation = CameraLocation + (Hero->GetActorForwardVector() * MuzzleOffsetDistance);
 
 		// Skew the aim to be slightly upwards.
-		FRotator MuzzleRotation = UKismetMathLibrary::FindLookAtRotation(MuzzleLocation, TraceEnd);
+		FRotator MuzzleRotation = UKismetMathLibrary::FindLookAtRotation(TraceStart, TraceEnd);
 
 		if (GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, QueryParams))
 		{
