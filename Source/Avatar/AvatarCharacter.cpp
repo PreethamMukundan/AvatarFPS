@@ -19,6 +19,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include"DrawDebugHelpers.h"
+#include "TimerManager.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AAvatarCharacter
@@ -143,12 +144,55 @@ void AAvatarCharacter::OnRep_PlayerState()
 
 	InitializeAttributes();
 
-	if (AbilitySystemComp && InputComponent)
-	{
-		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EGASAbilityInputID", static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
+	
+}
 
-		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
+void AAvatarCharacter::PrimaryFirePressed()
+{
+	if (!bNeedPrimaryConfirm)
+	{
+		
+		float FirstDelay =FMath::Max(TimeOfLastShot + FireRate - GetWorld()->TimeSeconds,0.0f);
+		FString TheFloatStr = "Dam=" + FString::SanitizeFloat(FirstDelay);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Blue, *TheFloatStr);
+		GetWorldTimerManager().SetTimer(PrimaryFireTickHandle,this,&AAvatarCharacter::PrimaryFireTickFunction, FireRate, true, FirstDelay);
 	}
+	else
+	{
+		AbilitySystemComp->TargetConfirm();
+	}
+}
+
+void AAvatarCharacter::PrimaryFireReleased()
+{
+	GetWorldTimerManager().ClearTimer(PrimaryFireTickHandle);
+}
+
+void AAvatarCharacter::PrimaryFireTickFunction()
+{
+	AbilitySystemComp->TryActivateAbilityByClass(PrimaryFireAbility, true);
+	TimeOfLastShot = GetWorld()->TimeSeconds;
+}
+
+void AAvatarCharacter::SecondryFirePressed()
+{
+	AbilitySystemComp->TryActivateAbilityByClass(SecondryFireAbility, true);
+}
+
+void AAvatarCharacter::Ability_1Pressed()
+{
+	AbilitySystemComp->TryActivateAbilityByClass(Ability_1, true);
+}
+
+void AAvatarCharacter::Ability_2Pressed()
+{
+	AbilitySystemComp->TryActivateAbilityByClass(Ability_2, true);
+}
+
+void AAvatarCharacter::UltimateAbilityPressed()
+{
+	
+	AbilitySystemComp->TryActivateAbilityByClass(UltimateAbility, true);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -172,6 +216,18 @@ void AAvatarCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AAvatarCharacter::LookUpAtRate);
 
+	PlayerInputComponent->BindAction("Primary_Attack", IE_Pressed, this, &AAvatarCharacter::PrimaryFirePressed);
+	PlayerInputComponent->BindAction("Primary_Attack", IE_Released, this, &AAvatarCharacter::PrimaryFireReleased);
+
+	PlayerInputComponent->BindAction("Secondry_Attack", IE_Pressed, this, &AAvatarCharacter::SecondryFirePressed);
+
+	PlayerInputComponent->BindAction("Ability_1", IE_Pressed, this, &AAvatarCharacter::Ability_1Pressed);
+
+	PlayerInputComponent->BindAction("Ability_2", IE_Pressed, this, &AAvatarCharacter::Ability_2Pressed);
+
+	PlayerInputComponent->BindAction("Ultimate", IE_Pressed, this, &AAvatarCharacter::UltimateAbilityPressed);
+
+
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AAvatarCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AAvatarCharacter::TouchStopped);
@@ -181,12 +237,12 @@ void AAvatarCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 
 
-	if (AbilitySystemComp && InputComponent)
+	/*if (AbilitySystemComp && InputComponent)
 	{
 		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel",  FTopLevelAssetPath(GetPathNameSafe(UClass::TryFindTypeSlow<UEnum>("EGASAbilityInputID"))), static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
 
 		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
-	}
+	}*/
 }
 
 void AAvatarCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

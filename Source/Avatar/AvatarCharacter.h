@@ -62,6 +62,27 @@ public:
 	virtual void OnRep_PlayerState() override;
 
 
+	void PrimaryFirePressed();
+	void PrimaryFireReleased();
+
+	void PrimaryFireTickFunction();
+	FTimerHandle PrimaryFireTickHandle;
+
+	void SecondryFirePressed();
+
+	void Ability_1Pressed();
+
+	void Ability_2Pressed();
+
+	void UltimateAbilityPressed();
+
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		float FireRate;
+
+	float TimeOfLastShot;
+
+
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
 		TSubclassOf<class UGameplayEffect> DefaultGameplayEffect;
@@ -70,6 +91,22 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
 		TArray<TSubclassOf<class UBaseChar_BaseGameplayAbility>> DefaultAbilities;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TSubclassOf<class UBaseChar_BaseGameplayAbility> PrimaryFireAbility;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TSubclassOf<class UBaseChar_BaseGameplayAbility> SecondryFireAbility;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TSubclassOf<class UBaseChar_BaseGameplayAbility> Ability_1;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TSubclassOf<class UBaseChar_BaseGameplayAbility> Ability_2;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TSubclassOf<class UBaseChar_BaseGameplayAbility> UltimateAbility;
+
 
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "GAS")
@@ -81,6 +118,11 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
 		int MaxComboCount;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
+		bool bNeedPrimaryConfirm;
+
+	
 
 	UFUNCTION()
 		void IncrementComboCount();
