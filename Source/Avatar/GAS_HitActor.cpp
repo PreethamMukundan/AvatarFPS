@@ -88,6 +88,20 @@ void AGAS_HitActor::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActo
 			FGameplayTag TagX = FGameplayTag::RequestGameplayTag(FName("Weapon.Projectile.Hit"));
 			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TagX.ToString());
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Hero, TagX, Pay);
+			if (Villan)
+			{
+				FGameplayEffectContextHandle EffectContext = Hero->GetAbilitySystemComponent()->MakeEffectContext();
+				EffectContext.AddSourceObject(this);
+				EffectContext.AddInstigator(Hero, this);
+				
+				
+
+				FGameplayEffectSpecHandle SpecHandle = Hero->GetAbilitySystemComponent()->MakeOutgoingSpec(DamageGameplayEffect, 1, EffectContext);
+				
+				//ro->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(SpecHandle, Villan->GetAbilitySystemComponent());
+				Hero->GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), Villan->GetAbilitySystemComponent());
+				//Hero->GetAbilitySystemComponent()->ApplyGameplayEffectToTarget(DamageGameplayEffect, Villan->GetAbilitySystemComponent(), 1, EffectContext);
+			}
 
 			Destroy();
 

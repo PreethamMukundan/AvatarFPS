@@ -153,6 +153,7 @@ void UGA_BaseProjctWaitEvent_OwnerBase::EventReceived(FGameplayTag EventTag, FGa
 				  // GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, "Event recied");
 					Projectile = World->SpawnActor<AGAS_HitActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 					Projectile->SetOwner(GetAvatarActorFromActorInfo());
+					Projectile->DamageGameplayEffect = /*NewObject<UGameplayEffect>(this,*/ DamageGameplayEffect;
 					FGameplayCueParameters ImpactParams;
 					ImpactParams.Location = Hero->GetActorLocation();
 
@@ -223,27 +224,27 @@ void UGA_BaseProjctWaitEvent_OwnerBase::EventReceived(FGameplayTag EventTag, FGa
 
 void UGA_BaseProjctWaitEvent_OwnerBase::HitEventReceived(FGameplayEventData EventData)
 {
-	FGameplayAbilityTargetDataHandle Handle;
-	Handle.Append(EventData.TargetData);
+	//FGameplayAbilityTargetDataHandle Handle;
+	//Handle.Append(EventData.TargetData);
 
 
-	const AAvatarCharacter* Villan = Cast<	AAvatarCharacter>(EventData.Target);
+	//const AAvatarCharacter* Villan = Cast<	AAvatarCharacter>(EventData.Target);
 
-	if (Villan && GetCurrentActivationInfo().ActivationMode == EGameplayAbilityActivationMode::Authority)
-	{
-		/*FGameplayCueParameters ImpactParams;
-		ImpactParams.Location = Villan->GetActorLocation();
+	//if (Villan && GetCurrentActivationInfo().ActivationMode == EGameplayAbilityActivationMode::Authority)
+	//{
+	//	/*FGameplayCueParameters ImpactParams;
+	//	ImpactParams.Location = Villan->GetActorLocation();
 
-		FGameplayTag TagImpact = FGameplayTag::RequestGameplayTag(FName(GCTagForImpact));
+	//	FGameplayTag TagImpact = FGameplayTag::RequestGameplayTag(FName(GCTagForImpact));
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, "Effect");
-		Villan->GetAbilitySystemComponent()->AddGameplayCue(TagImpact, ImpactParams);*/
+	//	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, "Effect");
+	//	Villan->GetAbilitySystemComponent()->AddGameplayCue(TagImpact, ImpactParams);*/
 
-		ApplyGameplayEffectToTarget(GetCurrentAbilitySpecHandle(), CurrentActorInfo, CurrentActivationInfo, EventData.TargetData, DamageGameplayEffect, 1);
+	//	ApplyGameplayEffectToTarget(GetCurrentAbilitySpecHandle(), CurrentActorInfo, CurrentActivationInfo, EventData.TargetData, DamageGameplayEffect, 1);
 
 
-	}
-
+	//}
+	
 }
 
 void UGA_BaseProjctWaitEvent_OwnerBase::ProjectileDestroyed(AActor* DestroyedActor)

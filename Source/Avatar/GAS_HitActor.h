@@ -19,6 +19,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		class USphereComponent* CollisionComp;
 
+	
+
+	TSubclassOf<class UGameplayEffect> DamageGameplayEffect;
+
 	UPROPERTY(VisibleAnywhere, Category = Movement)
 		class UProjectileMovementComponent* ProjectileMovementComponent;
 
