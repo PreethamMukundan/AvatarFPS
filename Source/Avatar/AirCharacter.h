@@ -13,5 +13,9 @@ UCLASS()
 class AVATAR_API AAirCharacter : public AAvatarCharacter
 {
 	GENERATED_BODY()
+
+
+	
+
 	
 };

@@ -8,6 +8,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include"GAS_HitActor.h"
+#include"GAS_HITActor_WithPhysics.h"
 #include "GA_BaseProjectileAndWaitForEvent.generated.h"
 
 /**
@@ -75,9 +76,9 @@ protected:
 		void EventReceived(FGameplayTag EventTag, FGameplayEventData EventData);
 
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-		TSubclassOf<AGAS_HitActor> ProjectileClass;
+		TSubclassOf<AGAS_HITActor_WithPhysics> ProjectileClass;
 
-	class AGAS_HitActor* Projectile;
+	class AGAS_HITActor_WithPhysics* Projectile;
 
 
 	UFUNCTION()

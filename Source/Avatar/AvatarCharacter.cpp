@@ -20,6 +20,7 @@
 #include "Kismet/GameplayStatics.h"
 #include"DrawDebugHelpers.h"
 #include "TimerManager.h"
+#include "Components/SphereComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AAvatarCharacter
@@ -65,6 +66,9 @@ AAvatarCharacter::AAvatarCharacter()
 	//AttackCollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttackCollisionComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
+	LandingCollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("LandingCollisionComp"));
+	LandingCollisionComp->SetupAttachment(RootComponent);
+	LandingCollisionComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
 	//GAS Components
 	AbilitySystemComp = CreateDefaultSubobject<UBaseChar_AbilitySystemComponent>(TEXT("AbilitySystemComp"));
@@ -118,8 +122,31 @@ void AAvatarCharacter::GiveAbilities()
 		{
 			DefaultAbilitiesHandles.Add(
 			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this)));
-
-
+		}
+		if (PrimaryFireAbility)
+		{
+			DefaultAbilitiesHandles.Add(
+				AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(PrimaryFireAbility, 1, static_cast<int32>(PrimaryFireAbility.GetDefaultObject()->AbilityInputID), this)));
+		}
+		if (SecondryFireAbility)
+		{
+			DefaultAbilitiesHandles.Add(
+				AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(SecondryFireAbility, 1, static_cast<int32>(SecondryFireAbility.GetDefaultObject()->AbilityInputID), this)));
+		}
+		if (Ability_1)
+		{
+			DefaultAbilitiesHandles.Add(
+				AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(Ability_1, 1, static_cast<int32>(Ability_1.GetDefaultObject()->AbilityInputID), this)));
+		}
+		if (Ability_2)
+		{
+			DefaultAbilitiesHandles.Add(
+				AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(Ability_2, 1, static_cast<int32>(Ability_2.GetDefaultObject()->AbilityInputID), this)));
+		}
+		if (UltimateAbility)
+		{
+			DefaultAbilitiesHandles.Add(
+				AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(UltimateAbility, 1, static_cast<int32>(UltimateAbility.GetDefaultObject()->AbilityInputID), this)));
 		}
 	}
 }

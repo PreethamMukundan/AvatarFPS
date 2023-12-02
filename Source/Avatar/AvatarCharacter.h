@@ -39,6 +39,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UBoxComponent* AttackCollisionComp;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class USphereComponent* LandingCollisionComp;
+
 
 	FVector GetCamForwardVector();
 
@@ -119,7 +122,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
 		int MaxComboCount;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Combo")
 		bool bNeedPrimaryConfirm;
 
 	

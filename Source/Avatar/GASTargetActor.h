@@ -18,10 +18,12 @@ public:
 
 	AGASTargetActor();
 
+	
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	AGameplayAbilityWorldReticle* MyReticleActor;
+	 AGameplayAbilityWorldReticle* MyReticleActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = true), Category = "GAS")
 		float TraceRange;

@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "GAS_HitActor.generated.h"
+#include "GAS_HITActor_WithPhysics.generated.h"
 
 UCLASS()
-class AVATAR_API AGAS_HitActor : public AActor
+class AVATAR_API AGAS_HITActor_WithPhysics : public AActor
 {
 	GENERATED_BODY()
 	
-public:
+public:	
 	// Sets default values for this actor's properties
-	AGAS_HitActor();
-
+	AGAS_HITActor_WithPhysics();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		class USphereComponent* CollisionComp;
@@ -22,6 +21,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		class USphereComponent* HomingCollisionComp;
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Camera)
 	TSubclassOf<class UGameplayEffect> DamageGameplayEffect;
 
 	UPROPERTY(VisibleAnywhere, Category = Movement)

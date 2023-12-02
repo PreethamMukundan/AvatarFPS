@@ -16,11 +16,14 @@ AGASTargetActor::AGASTargetActor()
 	MyReticleActor = nullptr;
 }
 
-void AGASTargetActor::Tick(float DeltaTime) 
+
+
+
+void AGASTargetActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	LineTraceFN(TraceHitResults);
-
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "GASTARTick");
 	if (MyReticleActor)
 	{
 		if (TraceHitResults.bBlockingHit)

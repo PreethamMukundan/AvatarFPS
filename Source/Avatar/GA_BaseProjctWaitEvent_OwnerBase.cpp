@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include"BaseChar_AbilitySystemComponent.h"
+#include "Components/SphereComponent.h"
 
 
 
@@ -173,14 +174,15 @@ void UGA_BaseProjctWaitEvent_OwnerBase::EventReceived(FGameplayTag EventTag, FGa
 
 						FVector LaunchDirection = MuzzleRotation.Vector();
 						Projectile->FireInDirection(LaunchDirection);
+						
 
 						if (bIsAHomingProjectile == true)
 						{
-							AAvatarCharacter* HomingTar = FindClosestTargetToHero();
-							if (HomingTar)
-							{
-								Projectile->HomingTargetSet(HomingTar, HomingAccuracy);
-							}
+							
+								Projectile->ProjectileHomingAccuracy = HomingAccuracy;
+								Projectile->HomingCollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+								Projectile->HomingCollisionComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+							
 						}
 
 						Projectile->OnDestroyed.AddDynamic(this, &UGA_BaseProjctWaitEvent_OwnerBase::ProjectileDestroyed);

@@ -148,7 +148,7 @@ void UGA_BaseProjectileAndWaitForEvent::EventReceived(FGameplayTag EventTag, FGa
 				{
 					// Spawn the projectile at the muzzle.
 				  // GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, "Event recied");
-					Projectile = World->SpawnActor<AGAS_HitActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+					Projectile = World->SpawnActor<AGAS_HITActor_WithPhysics>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 					Projectile->SetOwner(GetAvatarActorFromActorInfo());
 					FGameplayCueParameters ImpactParams;
 					ImpactParams.Location = Hero->GetActorLocation();
