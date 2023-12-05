@@ -149,6 +149,16 @@ void AAvatarCharacter::GiveAbilities()
 				AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(UltimateAbility, 1, static_cast<int32>(UltimateAbility.GetDefaultObject()->AbilityInputID), this)));
 		}
 	}
+	if (HasAuthority() && AbilitySystemComp)
+	{
+		for (TSubclassOf<UBaseChar_BaseGameplayAbility>& StartupAbility : DefaultAbilities)
+		{
+
+			AbilitySystemComp->GiveAbility(FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
+
+
+		}
+	}
 }
 
 void AAvatarCharacter::PossessedBy(AController * NewController)
@@ -264,12 +274,12 @@ void AAvatarCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 
 
-	/*if (AbilitySystemComp && InputComponent)
+	if (AbilitySystemComp && InputComponent)
 	{
 		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel",  FTopLevelAssetPath(GetPathNameSafe(UClass::TryFindTypeSlow<UEnum>("EGASAbilityInputID"))), static_cast<int32>(EGASAbilityInputID::Confirm), static_cast<int32>(EGASAbilityInputID::Cancel));
 
 		AbilitySystemComp->BindAbilityActivationToInputComponent(InputComponent, Binds);
-	}*/
+	}
 }
 
 void AAvatarCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

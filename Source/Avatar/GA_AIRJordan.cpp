@@ -3,6 +3,7 @@
 
 #include "GA_AIRJordan.h"
 #include "Abilities/Tasks/AbilityTask_WaitMovementModeChange.h"
+#include "Abilities/Tasks/AbilityTask_WaitInputRelease.h"
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include"GASTargetActor.h"
 #include"AvatarCharacter.h"
@@ -31,35 +32,12 @@ void UGA_AIRJordan::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 	
 	Hero = Cast<	AAvatarCharacter>(GetAvatarActorFromActorInfo());
-	UAbilityTask_WaitMovementModeChange* MovementModeTask = UAbilityTask_WaitMovementModeChange::CreateWaitMovementModeChange(this, EMovementMode::MOVE_Walking);
-	MovementModeTask->OnChange.AddDynamic(this, &UGA_AIRJordan::OnMovementRelEvent);
-	MovementModeTask->ReadyForActivation();
 
-	if (Hero->GetCharacterMovement()->IsMovingOnGround())
-	{
-		FVector StartLoc = Hero->GetActorLocation();
-		FVector EndLoc = FVector(0, 0, JumpPower);
-		
-			//Getting the Direction the player is moving
-			if (Hero->GetCharacterMovement()->GetCurrentAcceleration() != FVector(0, 0, 0))
-			{
-				FVector temp= Hero->GetCharacterMovement()->GetCurrentAcceleration().GetSafeNormal() * DirectionPower;
-				EndLoc = FVector(temp.X, temp.Y, JumpPower);
-			}
-			else
-			{
-				//if the player is not moving make end point behind him
-				EndLoc = FVector(0, 0, JumpPower);
-			}
-			Hero->LaunchCharacter(EndLoc, true, true);
-	}
-	else
-	{
-		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
-	}
-	/*UAbilityTask_WaitInputRelease* InputTask = UAbilityTask_WaitInputRelease::WaitInputRelease(this, false);
+	//UAbilityTask_WaitInputRelease* InputReleaseTask=UAbilityTask_WaitInputRelease::Rela
+	AOERadius = 150.0f;
+	UAbilityTask_WaitInputRelease* InputTask = UAbilityTask_WaitInputRelease::WaitInputRelease(this, false);
 	InputTask->OnRelease.AddDynamic(this, &UGA_AIRJordan::OnInputRelEvent);
-	InputTask->ReadyForActivation();*/
+	InputTask->ReadyForActivation();
 	//Important code
 	/*FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = Hero;
@@ -127,6 +105,41 @@ void UGA_AIRJordan::OnMovementRelEvent(EMovementMode NewMovementMode)
 void UGA_AIRJordan::WaitAfterLandOver()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
+}
+
+void UGA_AIRJordan::OnInputRelEvent(float TimeHeld)
+{
+	AOERadius = AOERadius + (TimeHeld * 10);
+
+	FString TheFloatStr = "Dam=" + FString::SanitizeFloat(TimeHeld);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Blue, *TheFloatStr);
+
+	UAbilityTask_WaitMovementModeChange* MovementModeTask = UAbilityTask_WaitMovementModeChange::CreateWaitMovementModeChange(this, EMovementMode::MOVE_Walking);
+	MovementModeTask->OnChange.AddDynamic(this, &UGA_AIRJordan::OnMovementRelEvent);
+	MovementModeTask->ReadyForActivation();
+
+	if (Hero->GetCharacterMovement()->IsMovingOnGround())
+	{
+		FVector StartLoc = Hero->GetActorLocation();
+		FVector EndLoc = FVector(0, 0, JumpPower);
+
+		//Getting the Direction the player is moving
+		if (Hero->GetCharacterMovement()->GetCurrentAcceleration() != FVector(0, 0, 0))
+		{
+			FVector temp = Hero->GetCharacterMovement()->GetCurrentAcceleration().GetSafeNormal() * DirectionPower;
+			EndLoc = FVector(temp.X, temp.Y, JumpPower);
+		}
+		else
+		{
+			//if the player is not moving make end point behind him
+			EndLoc = FVector(0, 0, JumpPower);
+		}
+		Hero->LaunchCharacter(EndLoc, true, true);
+	}
+	else
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
+	}
 }
 
 

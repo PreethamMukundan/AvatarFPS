@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "BaseChar_BaseGameplayAbility.h"
-#include "GA_AIRJordan.generated.h"
+#include "GA_GatewayAbility.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AVATAR_API UGA_AIRJordan : public UBaseChar_BaseGameplayAbility
+class AVATAR_API UGA_GatewayAbility : public UBaseChar_BaseGameplayAbility
 {
 	GENERATED_BODY()
 public:
 
-	UGA_AIRJordan();
+	UGA_GatewayAbility();
 
 	/** Actually activate ability, do not call this directly. We'll call it from APAHeroCharacter::ActivateAbilitiesWithTags(). */
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
@@ -25,31 +25,23 @@ public:
 
 	class AAvatarCharacter* Hero;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
-		TSubclassOf<class AGameplayAbilityWorldReticle> ReticleActorClass;
+	FVector TeleportLocation;
 
-	UFUNCTION()
-		void OnTargetReceived(const FGameplayAbilityTargetDataHandle& Data);
+	class AActor* TeleporterActor;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Distance")
-		float JumpPower;
+		UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS")
+		TSubclassOf<class AActor> TeleporterActorClass;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Distance")
-		float DirectionPower;
+		UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Distance")
+		float MaxTimeInTeleport;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Distance")
-		float AOERadius;
+		UFUNCTION()
+	void WaitMaxOver();
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-		TSubclassOf<UGameplayEffect> DamageGameplayEffect;
-
-	UFUNCTION()
-	void OnMovementRelEvent(EMovementMode NewMovementMode);
-
-	UFUNCTION()
-	void WaitAfterLandOver();
-
-	UFUNCTION()
+		UFUNCTION()
 	void OnInputRelEvent(float TimeHeld);
-	
+
+
+		UFUNCTION()
+		void TeleportBack();
 };
