@@ -20,6 +20,7 @@
 #include "Kismet/GameplayStatics.h"
 #include"DrawDebugHelpers.h"
 #include "TimerManager.h"
+#include "GA_BaseProjctWaitEvent_OwnerBase.h"
 #include "Components/SphereComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -75,13 +76,14 @@ AAvatarCharacter::AAvatarCharacter()
 	AbilitySystemComp->SetIsReplicated(true);
 	AbilitySystemComp->SetReplicationMode(EGameplayEffectReplicationMode::Full);
 	AbilitySystemComp->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Buff")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAvatarCharacter::AttackAbilityBoostTagChanged);
+	AbilitySystemComp->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("AIR.Secondry.AllyOOP")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAvatarCharacter::AttackAbilityAlleyOOPTagChanged);
 	AttributeSet = CreateDefaultSubobject<UBaseChar_AttributeSet>(TEXT("AttributeSet"));
 
 	bUseControllerRotationYaw = true;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-
+	TeamID = 0;
 	ComboCount = 1;
 	MaxComboCount = 3;
 }
@@ -288,6 +290,19 @@ void AAvatarCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 }
 
 
+void AAvatarCharacter::AttackAbilityAlleyOOPTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	if (NewCount > 0)
+	{
+		bWasHoming = true;
+
+	}
+	else
+	{
+		bWasHoming = false;
+	}
+}
+
 void AAvatarCharacter::IncrementComboCount()
 {
 	ComboCount++;
@@ -297,8 +312,44 @@ void AAvatarCharacter::IncrementComboCount()
 	}
 }
 
+AAvatarCharacter* AAvatarCharacter::FindClosestTargetToHero()
+{
+	TArray<AActor*> _TempArryActors;
+	float ClosestDis = 1000000000;
+	AAvatarCharacter* Target = nullptr;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAvatarCharacter::StaticClass(), _TempArryActors);
+	for (int32 i = 0; i < _TempArryActors.Num(); i++)
+	{
+		if (_TempArryActors[i] != this)
+		{
+
+			AAvatarCharacter* Villan = Cast<AAvatarCharacter>(_TempArryActors[i]);
+			FVector AandBminus = GetActorLocation() - Villan->GetActorLocation();
+			float InFront = FVector::DotProduct(AandBminus, Villan->GetActorForwardVector());
+			if (InFront > 0.5)
+			{
+				float dist = FVector::Dist(GetActorLocation(), _TempArryActors[i]->GetActorLocation());
+				if (dist < ClosestDis)
+				{
+
+					ClosestDis = dist;
+					Target = Villan;
+
+				}
+			}
+		}
+	}
+	if (Target)
+	{
+		return Target;
+	}
+	return nullptr;
+}
+
 void AAvatarCharacter::AttackAbilityBoostTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
+	
 }
 
 void AAvatarCharacter::OnResetVR()

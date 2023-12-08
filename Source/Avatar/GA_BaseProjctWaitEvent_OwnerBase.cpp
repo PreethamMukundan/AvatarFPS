@@ -31,6 +31,8 @@ void UGA_BaseProjctWaitEvent_OwnerBase::ActivateAbility(const FGameplayAbilitySp
 	Hero = Cast<	AAvatarCharacter>(GetAvatarActorFromActorInfo());
 	ProjectileClass = Hero->ProjectileClass;
 	DamageGameplayEffect = Hero->DamageGameplayEffect;
+	HomingAccuracy = Hero->HomingAccuracy;
+	bIsAHomingProjectile = Hero->bWasHoming;
 	if (Hero)
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, "RepFire");

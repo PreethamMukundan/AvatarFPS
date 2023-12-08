@@ -114,7 +114,15 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "GAS")
 		TArray<FGameplayAbilitySpecHandle> DefaultAbilitiesHandles;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "GAS")
+	int TeamID;
+
+
+	 void AttackAbilityAlleyOOPTagChanged(const FGameplayTag CallbackTag, int32 NewCount) ;
 	
+	
+
 
 	UPROPERTY(replicated, BlueprintReadOnly, Category = "Combo")
 		int ComboCount;
@@ -135,6 +143,17 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<UGameplayEffect> DamageGameplayEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		bool bWasHoming;
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	float HomingAccuracy;
+
+
+	UFUNCTION(BlueprintCallable)
+	AAvatarCharacter* FindClosestTargetToHero();
+
 
 	UFUNCTION()
 		virtual void AttackAbilityBoostTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
